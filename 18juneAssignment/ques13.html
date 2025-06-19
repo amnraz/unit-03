@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+            body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        #outputDiv {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: lightgray;
+            color: black;
+            min-height: 50px;
+        }
+
+        input,
+        button {
+            margin: 5px 0;
+            padding: 8px;
+            font-size: 14px;
+        }
+    </style>
+    </style>
+</head>
+
+<body>
+    
+  <h2>Change Background & Update Text</h2>
+
+  <label>Enter Background Color:</label><br>
+  <input type="text" id="colorInput" placeholder="e.g., red, blue, #00ff00"><br>
+
+  <label>Enter Text:</label><br>
+  <input type="text" id="textInput" placeholder="Enter your message"><br>
+
+  <button onclick="changeBackground()">Change Background</button>
+  <button onclick="updateText()">Update Text</button>
+
+  <div id="outputDiv">This is the initial text content.</div>
+    <script src="ques13.js"></script>
+</body>
+
+</html>
