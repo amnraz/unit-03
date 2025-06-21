@@ -6,28 +6,32 @@
   <title>Debugging Task</title>
 </head>
 <body>
-  <p id="message">Original Message</p>
+  <p id="message">Original Message</p> <!-- Fixed ID (was mistakenly referenced as 'massage') -->
   <button id="textButton">Change Text</button>
   <br><br>
   <div id="box" style="width: 100px; height: 100px; background-color: lightgray;"></div>
   <button id="colorButton">Change Background</button>
 
   <script>
-    // Corrected JavaScript code
+    //Fixed to '#message'
     const para = document.querySelector('#message');
+
+    // Fixed to getElementById
     const textButton = document.getElementById('textButton');
+
+    //   Fixed to 'addEventListener'
     textButton.addEventListener('click', () => {
+    //  Fixed to 'textContent'
       para.textContent = 'New Message';
     });
 
     const box = document.getElementById('box');
     const colorButton = document.getElementById('colorButton');
+
     colorButton.addEventListener('click', () => {
+    //   Fixed to 'style'
       box.style.backgroundColor = 'blue';
     });
   </script>
 </body>
 </html>
-
-
- 
