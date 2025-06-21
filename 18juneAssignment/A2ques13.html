@@ -1,0 +1,69 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Propagation Demo</title>
+  <style>
+    .box {
+      padding: 20px;
+      margin: 10px;
+      border: 2px solid black;
+    }
+    #outer { background-color: #95cef7; }
+    #middle { background-color: #71b8f1; }
+    #inner { background-color: #269bfb; }
+  </style>
+</head>
+<body>
+
+  <div id="outer" class="box">
+    Outer Div
+    <button id="outerBtn">Outer Button</button>
+    <div id="middle" class="box">
+      Middle Div
+      <button id="middleBtn">Middle Button</button>
+      <div id="inner" class="box">
+        Inner Div
+        <button id="innerBtn">Inner Button</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Helper function to create handlers
+    function createHandler(name, stop = false) {
+      return function (e) {
+        alert(`${name} clicked`);
+        console.log(`${name} event fired (Phase: ${e.eventPhase === 1 ? 'Capturing' : e.eventPhase === 2 ? 'At Target' : 'Bubbling'})`);
+
+        if (stop) {
+          e.stopPropagation(); // Stop both bubbling and capturing
+          console.log('Propagation stopped by ' + name);
+        }
+      };
+    }
+
+    
+    const elements = [
+      { id: 'outer', name: 'Outer Div' },
+      { id: 'middle', name: 'Middle Div' },
+      { id: 'inner', name: 'Inner Div' },
+      { id: 'outerBtn', name: 'Outer Button' },
+      { id: 'middleBtn', name: 'Middle Button' },
+      { id: 'innerBtn', name: 'Inner Button', stopPropagation: true }
+    ];
+
+    elements.forEach(({ id, name, stopPropagation }) => {
+      const el = document.getElementById(id);
+
+      // Capturing phase
+      el.addEventListener('click', createHandler(name + ' (capturing)'), true);
+
+      // Bubbling phase
+      el.addEventListener('click', createHandler(name + ' (bubbling)', stopPropagation), false);
+    });
+  </script>
+
+</body>
+</html>
