@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Persistent List App</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding:20px; max-width:500px; margin:auto; }
+    ul { list-style-type: none; padding:0; }
+    li { padding:5px 0; }
+    button { margin-left:10px; }
+  </style>
+</head>
+<body>
+  <h2>My List</h2>
+  <input id="newItem" placeholder="Enter item...">
+  <button id="addBtn">Add</button>
+  <button id="clearBtn">Clear All</button>
+  <p id="emptyMsg">No items added yet</p>
+  <ul id="itemList"></ul>
+
+  <script>
+    const STORAGE_KEY = 'items';
+    const itemList = document.getElementById('itemList');
+    const newItemInput = document.getElementById('newItem');
+    const emptyMsg = document.getElementById('emptyMsg');
+
+    // Load saved items
+    function loadItems() {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    }
+
+    // Save items
+    function saveItems(items) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    // Render items
+    function renderItems() {
+      const items = loadItems();
+      itemList.innerHTML = '';
+      if (items.length === 0) {
+        emptyMsg.style.display = 'block';
+      } else {
+        emptyMsg.style.display = 'none';
+        items.forEach((item, index) => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          
+          const removeBtn = document.createElement('button');
+          removeBtn.textContent = 'Remove';
+          removeBtn.addEventListener('click', () => {
+            const updatedItems = loadItems();
+            updatedItems.splice(index, 1);
+            saveItems(updatedItems);
+            renderItems();
+          });
+          
+          li.appendChild(removeBtn);
+          itemList.appendChild(li);
+        });
+      }
+    }
+
+    // Add item
+    document.getElementById('addBtn').addEventListener('click', () => {
+      const newItem = newItemInput.value.trim();
+      if (!newItem) {
+        alert('Please enter an item!');
+        return;
+      }
+      const items = loadItems();
+      items.push(newItem);
+      saveItems(items);
+      newItemInput.value = '';
+      renderItems();
+    });
+
+    // Clear All
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      renderItems();
+    });
+
+    // Initial load
+    renderItems();
+  </script>
+</body>
+</html>
