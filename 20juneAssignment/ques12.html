@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Theme Selector</title>
+  <style>
+    body.light {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    body.dark {
+      background-color: #222222;
+      color: #f5f5f5;
+    }
+    body.blue {
+      background-color: #007BFF;
+      color: #ffffff;
+    }
+    select {
+      padding: 5px 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Theme Selector</h2>
+  <select id="themeSelector">
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+    <option value="blue">Blue</option>
+  </select>
+
+  <script>
+    const themeSelector = document.getElementById("themeSelector");
+
+    // Apply theme
+    function applyTheme(theme) {
+      document.body.className = theme;
+    }
+
+    // Save theme
+    function saveTheme(theme) {
+      sessionStorage.setItem("selectedTheme", theme);
+    }
+
+    // Load theme
+    function loadTheme() {
+      const savedTheme = sessionStorage.getItem("selectedTheme");
+      if (savedTheme) {
+        themeSelector.value = savedTheme;
+        applyTheme(savedTheme);
+      } else {
+        themeSelector.value = "light"; // Default
+        applyTheme("light");
+      }
+    }
+
+    // Event listener
+    themeSelector.addEventListener("change", (e) => {
+      const selected = e.target.value;
+      applyTheme(selected);
+      saveTheme(selected);
+    });
+
+    // Initialize
+    loadTheme();
+  </script>
+</body>
+</html>
