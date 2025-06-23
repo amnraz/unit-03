@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Student Dashboard</h2>
+<form id="studentForm">
+  Name: <input id="name"><br>
+  Age: <input id="age" type="number"><br>
+  Grade: <input id="grade"><br>
+  Enrolled: <input id="enrolled" type="checkbox"><br>
+  <button type="submit">Add Student</button>
+</form>
+
+<h3>Student List</h3>
+<div id="studentList"></div>
+
+<!-- Firebase Scripts -->
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script>
+  // TODO: Replace with your actual Firebase configuration
+  const firebaseConfig = {
+    apiKey: "YOUR_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "YOUR_DB_URL",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MSID",
+    appId: "YOUR_APPID"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const form = document.getElementById('studentForm');
+  const list = document.getElementById('studentList');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const student = {
+      name: document.getElementById('name').value,
+      age: document.getElementById('age').value,
+      grade: document.getElementById('grade').value,
+      enrolled: document.getElementById('enrolled').checked
+    };
+    db.ref('students').push(student);
+    form.reset();
+  });
+
+  db.ref('students').on('value', snapshot => {
+    list.innerHTML = '';
+    snapshot.forEach(child => {
+      const data = child.val();
+      const div = document.createElement('div');
+      div.textContent = `${data.name}, Age: ${data.age}, Grade: ${data.grade}, Enrolled: ${data.enrolled}`;
+      const delButton = document.createElement('button');
+      delButton.textContent = 'Delete';
+      delButton.onclick = () => db.ref('students/' + child.key).remove();
+      div.appendChild(delButton);
+      list.appendChild(div);
+    });
+  });
+</script>
+</body>
+</html>
