@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   <style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .product {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>
+</head>
+
+<body>
+    <h2>PRODUCT SEARCH</h2>
+    <label> category :
+        <select id="category">
+            <option value="electronics">Electronics</option>
+            <option value="clothing">Clothing</option>
+            <option value="books">Books</option>
+        </select>
+    </label>
+
+    <label> Min Price :
+        <input type="number" id="minPrice" placeholder="e.g.1000">
+    </label>
+
+    <label> Max Price :
+        <input type="number" id="maxPrice" placeholder="e.g.5000">
+    </label>
+
+    <button onclick="fetchProducts()">Submit</button>
+    <div id="status"></div>
+    <div id="productList" class="grid"></div>
+    <!-- <img src="${ele.image}" alt="${ele.name}">
+<h4>${ele.name}</h4>
+<p>$${ele.price}</p> -->
+
+    <script>
+        async function fetchProducts() {
+            let category = document.getElementById('category').value;
+            let min = document.getElementById('minPrice').value || 0;
+            let max = document.getElementById('maxPrice').value || Infinity;
+            let productList = document.getElementById('productList');
+            let status = document.getElementById('status');
+
+            productList.innerHTML = "";
+            status.textContent = "Loading... "
+
+
+            const url = `https://682f23c6746f8ca4a48004bc.mockapi.io/products/products?category=${category}`;
+
+
+            try {
+                let res = await fetch(url)
+                if (!res.ok) throw new Error('failed to fetch the data')
+                let data = await res.json()
+                console.log(data);
+
+                // filter
+               data = data.filter(ele => ele.price >= min && ele.price <= max);
+                data.sort((m, n) => m.price - n.price)
+
+                if (data.length == 0) {
+                    status.textContent = "No Product Available"
+                    return
+                }
+                status.textContent = ""
+                data.forEach(ele => {
+                    let div = document.createElement('div')
+                    div.className = 'product'
+                    div.innerHTML = ` 
+                 <img src="${ele.image}" alt="${ele.name}">
+                 <h4>${ele.name}</h4>
+                 <p>$${ele.price}</p>`
+                    productList.appendChild(div)
+                });
+            } catch (error) {
+                console.log(error);
+                status.textContent = 'Something went wrong '
+            }
+        }
+    </script>
+</body>
+
+</html>
